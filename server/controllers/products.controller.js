@@ -1,13 +1,23 @@
+import Product from "../models/Products.js";
+
 export const getProducts = async (req, res) => {
-  res.json("Productos");
+  try {
+    const products = await Product.find();
+    res.json(products);
+  } catch (error) {
+    error.message = "Error en el servidor";
+    res.status(500).json(error);
+  }
 };
 
-export const getProductsById = async (req, res) => {
-  res.json("Producto");
-};
+export const getProductsById = async (req, res) => {};
 
 export const createProducts = async (req, res) => {
-  res.json("create");
+  try {
+    const newProduct = new Product(req.body);
+    newProduct.save();
+    res.json(newProduct);
+  } catch (error) {}
 };
 
 export const updateProducts = async (req, res) => {

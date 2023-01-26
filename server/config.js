@@ -11,4 +11,7 @@ export const ROOT = {
   description: "App Web FullStack con JWT",
   author: "Naim Chaya",
   version: "1.0.0",
+  endpoints: {
+    products: "/products",
+  },
 };
