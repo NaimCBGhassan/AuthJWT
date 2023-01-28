@@ -4,8 +4,10 @@ import morgan from "morgan";
 
 import { authRouter, productsRouter, userRouter } from "./routes/index.js";
 import { ROOT } from "./config.js";
+import { createRoles } from "./libs/initialSetUp.js";
 
 const app = express();
+createRoles();
 
 //middlewares
 app.use(express.json());
@@ -16,6 +18,7 @@ app.use(cors());
 
 app.get("/", (req, res) => res.json(ROOT));
 
-app.use("/products", productsRouter);
+app.use("/api/products", productsRouter);
+app.use("/api/auth", authRouter);
 
 export default app;

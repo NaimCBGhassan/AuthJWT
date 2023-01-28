@@ -8,7 +8,6 @@ const roleSchema = new Schema(
     },
   },
   {
-    timestamps: true,
     versionKey: false,
   }
 );
