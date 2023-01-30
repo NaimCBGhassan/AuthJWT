@@ -8,10 +8,10 @@ export const signUp = async (req, res) => {
     const { username, email, password, roles } = req.body;
 
     const foundUsername = await User.find({ username });
-    if (!(foundUsername.length === 0)) return res.json({ msg: "Username alredy exist" });
+    if (!(foundUsername.length === 0)) return res.status(400).json({ token: null, msg: "Username alredy exist" });
 
     const foundEmail = await User.find({ email });
-    if (!(foundEmail.length === 0)) return res.json({ msg: "Email alredy exist" });
+    if (!(foundEmail.length === 0)) return res.status(400).json({ token: null, msg: "Email alredy exist" });
 
     const newUser = await new User({
       username,
@@ -23,9 +23,8 @@ export const signUp = async (req, res) => {
       const foundRoles = await Role.find({ name: { $in: roles } });
       newUser.roles = foundRoles.map((role) => role._id);
     } else {
-      const role = await Role.find({ name: "user" });
-      role[0]._id;
-      newUser.roles = [role[0]._id];
+      const role = await Role.findOne({ name: "user" });
+      newUser.roles = [role._id];
     }
 
     const savedUser = await newUser.save();
@@ -33,13 +32,32 @@ export const signUp = async (req, res) => {
       expiresIn: 24 * 60 * 60,
     });
 
-    res.json({ token });
+    res.status(200).json({ token });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ msg: "Fallo en la solicitud" });
+    res.status(500).json({ msg: "Internal server error" });
   }
 };
 
 export const signIn = async (req, res) => {
-  res.json({ signUp: "SignUp" });
+  try {
+    const { username, password } = req.body;
+
+    const foundUser = await User.findOne({ username });
+    console.log(foundUser);
+    if (!foundUser) return res.status(400).json({ token: null, msg: "User doesn`t exist" });
+
+    const chechkPassword = await User.comparePassword(password, foundUser.password);
+
+    if (!chechkPassword) return res.status(400).json({ token: null, msg: "Incorrect password" });
+
+    const token = jwt.sign({ id: foundUser._id }, SECRET_JWT, {
+      expiresIn: 24 * 60 * 60,
+    });
+
+    res.status(200).json({ token });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: "Internal server error" });
+  }
 };

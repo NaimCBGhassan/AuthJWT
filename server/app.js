@@ -20,5 +20,6 @@ app.get("/", (req, res) => res.json(ROOT));
 
 app.use("/api/products", productsRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/users", userRouter);
 
 export default app;
