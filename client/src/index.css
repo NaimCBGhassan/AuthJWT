@@ -1,0 +1,9 @@
+body {
+  font-family: "Barlow", sans-serif;
+  font-family: "Raleway", sans-serif;
+  min-height: 100vh;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
