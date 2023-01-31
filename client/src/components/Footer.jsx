@@ -1,12 +1,18 @@
+import { AiOutlineInstagram, AiOutlineTwitter, AiFillFacebook, AiOutlineMail } from "react-icons/ai";
+import { TbWebhook } from "react-icons/tb";
+
 const Footer = () => {
   return (
-    <div className="absolute inset-x-0 bottom-0 bg-slate-900  px-10 py-2">
-      <div>
-        <button className="px-3 py-1 font-bold rounded-md bg-pink-800 hover:bg-pink-600 text-slate-50 mx-4">
-          SignIn
-        </button>
-        <button className="px-3 py-1 font-bold rounded-md bg-pink-800 hover:bg-pink-600 text-slate-50">SignUp</button>
+    <div className="absolute inset-x-0 bottom-0 z-10 flex justify-between items-center bg-slate-900  px-8 py-2">
+      <div className=" flex justify-center gap-7">
+        <AiOutlineInstagram className="h-4 w-4 p-0 text-slate-50" />
+        <AiOutlineTwitter className="h-4 w-4 p-0 text-slate-50" />
+        <AiFillFacebook className="h-4 w-4 p-0 text-slate-50" />
+        <AiOutlineMail className="h-4 w-4 p-0 text-slate-50" />
       </div>
+      <p className="text-slate-50 ">
+        <TbWebhook className="inline" /> <span className="text-xs">Naim Chaya</span>
+      </p>
     </div>
   );
 };

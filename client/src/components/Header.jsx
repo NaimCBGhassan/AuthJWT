@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, NavLink } from "react-router-dom";
 
 import { TbWebhook } from "react-icons/tb";
 
@@ -11,19 +11,23 @@ const Header = () => {
   useEffect(() => {
     if (location.pathname === "/") setSign(false);
     if (location.pathname !== "/") setSign(true);
-  }, []);
+  }, [location.pathname]);
 
   return (
-    <div className="sticky inset-x-0  flex justify-between items-center bg-slate-900  px-10 py-2">
+    <div className="sticky inset-x-0 top-0 z-10 flex justify-between items-center bg-slate-900  px-10 py-2">
       <TbWebhook className="h-8 w-8 p-0 text-slate-50" />
       {sign ? (
-        <button className="px-3 py-1 font-bold rounded-md bg-pink-800 hover:bg-pink-600 text-slate-50 ">SignOut</button>
+        <NavLink to="/" className="px-3 py-1 font-bold rounded-md bg-pink-800 hover:bg-pink-600 text-slate-50 ">
+          SignOut
+        </NavLink>
       ) : (
         <div>
-          <button className="px-3 py-1 font-bold rounded-md bg-pink-800 hover:bg-pink-600 text-slate-50 mx-4">
+          <NavLink to="/" className="px-3 py-1 font-bold rounded-md bg-pink-800 hover:bg-pink-600 text-slate-50 mx-4">
             SignIn
-          </button>
-          <button className="px-3 py-1 font-bold rounded-md bg-pink-800 hover:bg-pink-600 text-slate-50">SignUp</button>
+          </NavLink>
+          <NavLink to="/signup" className="px-3 py-1 font-bold rounded-md bg-pink-800 hover:bg-pink-600 text-slate-50">
+            SignUp
+          </NavLink>
         </div>
       )}
     </div>
