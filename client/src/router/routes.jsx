@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import { SignUp, SignIn } from "../components/index";
+import { SignUp, SignIn, ProtectedRoute } from "../components/index";
 import { LayoutPublic, NotFound, Products } from "../pages/index.jsx";
 
 export const router = createBrowserRouter([
@@ -17,8 +17,14 @@ export const router = createBrowserRouter([
         element: <SignUp />,
       },
       {
-        path: "/:user",
-        element: <Products />,
+        path: "/products",
+        element: <ProtectedRoute />,
+        children: [
+          {
+            index: true,
+            element: <Products />,
+          },
+        ],
       },
       {
         path: "/analysis",
