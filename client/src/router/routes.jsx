@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import { SignUp, SignIn, ProtectedRoute } from "../components/index";
+import Analysis from "../pages/Analysis";
 import { LayoutPublic, NotFound, Products } from "../pages/index.jsx";
 
 export const router = createBrowserRouter([
@@ -17,18 +18,18 @@ export const router = createBrowserRouter([
         element: <SignUp />,
       },
       {
-        path: "/products",
+        path: "/",
         element: <ProtectedRoute />,
         children: [
           {
-            index: true,
+            path: "/products",
             element: <Products />,
           },
+          {
+            path: "/analysis",
+            element: <Analysis />,
+          },
         ],
-      },
-      {
-        path: "/analysis",
-        element: <Products />,
       },
     ],
   },

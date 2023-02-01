@@ -21,6 +21,18 @@ export const getUsers = async (req, res) => {
   }
 };
 
+export const getUser = async (req, res) => {
+  try {
+    let { _id, username, email, roles } = await User.findById({ _id: req.userId }).populate("roles");
+
+    roles = roles.map((el) => el.name);
+
+    return res.status(200).json({ _id, username, email, roles });
+  } catch (error) {
+    return res.status(500).json({ msg: "The user was not founded" });
+  }
+};
+
 export const createUser = async (req, res) => {
   const { username, email, password, roles } = req.body;
 

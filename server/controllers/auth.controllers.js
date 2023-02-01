@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import { SECRET_JWT } from "../config.js";
 import User from "../models/User.js";
 import { foundedEmail, foundedUsername, setRoles } from "../libs/validations.js";
+import Role from "../models/Role.js";
 
 export const signUp = async (req, res) => {
   try {
@@ -11,11 +12,13 @@ export const signUp = async (req, res) => {
 
     if (await foundedEmail(email)) return res.status(400).json({ token: null, msg: "Email alredy exist" });
 
+    const roles = await Role.findOne({ name: "user" });
+    console.log(roles);
     let newUser = await new User({
       username,
       email,
       password: await User.hashPassword(password),
-      roles: "user",
+      roles: [roles._id],
     });
 
     const savedUser = await newUser.save();

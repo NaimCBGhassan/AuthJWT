@@ -1,8 +1,10 @@
-export const getUser = async () => {
+import axios from "axios";
+
+export const getUser = async (token) => {
   try {
-    return await axios.get("/api/users", { headers: { Authorization: token } });
-    console.log(res);
+    const res = await axios.get("/api/users/user", { headers: { Authorization: token } });
+    return res;
   } catch (error) {
-    return error;
+    throw error;
   }
 };
