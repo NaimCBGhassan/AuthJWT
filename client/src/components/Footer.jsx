@@ -3,7 +3,7 @@ import { TbWebhook } from "react-icons/tb";
 
 const Footer = () => {
   return (
-    <div className="absolute inset-x-0 bottom-0 z-10 flex justify-between items-center bg-slate-900  px-8 py-2">
+    <div className="fixed inset-x-0 bottom-0 max-w-screen-2xl z-0 flex justify-between items-center bg-slate-900  px-8 py-2">
       <div className=" flex justify-center gap-7">
         <AiOutlineInstagram className="h-4 w-4 p-0 text-slate-50" />
         <AiOutlineTwitter className="h-4 w-4 p-0 text-slate-50" />
