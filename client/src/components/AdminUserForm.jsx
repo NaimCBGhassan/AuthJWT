@@ -1,9 +1,28 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { TbCloudFog } from "react-icons/tb";
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import * as Yup from "yup";
+import { useSignUp } from "../api/sign";
+
+const initialValues = { username: "", email: "", password: "", roles: "" };
 
 const AdminUserForm = ({ setView }) => {
+  const [values, setValues] = useState(initialValues);
+  const [errorView, setErrorView] = useState(false);
+
+  const token = sessionStorage.getItem("token");
+
+  const { mutate, data, error } = useSignUp();
+
+  const handleErrors = () => {
+    /* console.log(error); */
+    if (error.msg.includes("Email")) setErrorView({ email: true, msg: error.msg });
+    if (error.msg.includes("Username")) setErrorView({ username: true, msg: error.msg });
+    /* if(error.msg.includes("password"))setError({ password: true, msg: data.msg })
+    if(error.msg.includes("password"))setError({ password: true, msg: data.msg }) */
+    /*  setTimeout(() => setError(false), 2000); */
+  };
+
   return (
     <div className=" flex-grow flex flex-col items-center">
       <header className="w-2/6 pt-4 flex justify-between text-sm text-slate-50 cursor-pointer">
@@ -12,22 +31,20 @@ const AdminUserForm = ({ setView }) => {
           Create Products
         </button>
       </header>
-
       <Formik
-        initialValues={{ username: "", email: "", password: "", roles: "" }}
+        initialValues={values}
         validationSchema={Yup.object({
           username: Yup.string().min(1, "Minimum 1 characters").required("Username is required"),
           email: Yup.string().min(1, "Minimum 1 characters").required("Email is required"),
-          password: Yup.number().min(1, "Minimum 1 characters").required("Password is required"),
+          password: Yup.string().min(1, "Minimum 1 characters").required("Password is required"),
           roles: Yup.string().min(1, "Minimum 1 characters").required("Roles is required"),
         })}
-        onSubmit={(values, actions) => {
+        onSubmit={async (values, actions) => {
           values.roles = [values.roles];
           if (values.roles.includes("admin")) values.roles.push("moderator");
-          console.log(values);
-
-          values.roles = values.roles[0];
-          console.log(values.roles);
+          await mutate({ values, token });
+          actions.setFieldValue("roles", values.roles[0]);
+          if (error) handleErrors(data);
         }}
       >
         {({ handleSubmit }) => (
@@ -42,6 +59,7 @@ const AdminUserForm = ({ setView }) => {
               </label>
               <Field name="username" id="username" className="rounded px-2 py-1 w-full"></Field>
               <ErrorMessage component="p" className="text-pink-700 text-sm" name="username" />
+              {errorView?.username && <p className="text-pink-700 text-sm">{error.msg}</p>}
             </div>
             <div className="h-16 mt-1">
               <label htmlFor="email" className="block w-100 text-sm text-slate-50">
@@ -54,7 +72,13 @@ const AdminUserForm = ({ setView }) => {
               <label htmlFor="password" className="block w-100 text-sm text-slate-50">
                 Password
               </label>
-              <Field name="password" id="password" className="rounded px-2 py-1 w-full"></Field>
+              <Field
+                type="password"
+                autoComplete="on"
+                name="password"
+                id="password"
+                className="rounded px-2 py-1 w-full"
+              ></Field>
               <ErrorMessage component="p" className="text-pink-700 text-sm" name="password" />
             </div>
             <div className="h-20 mt-1">

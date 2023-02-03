@@ -12,3 +12,16 @@ export const axiosSignIn = async (values) => {
     return error.response.data;
   }
 };
+
+/*SignUp*/
+const axiosSignUp = async ({ values, token }) => {
+  try {
+    return await axios.post("/api/users", values, { headers: { Authorization: token } });
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+export function useSignUp() {
+  return useMutation(axiosSignUp, {});
+}

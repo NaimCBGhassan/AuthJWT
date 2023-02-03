@@ -50,7 +50,7 @@ export const createUser = async (req, res) => {
 
   const savedUser = await newUser.save();
 
-  res.status(200).json({ savedUser });
+  res.status(200).json({ username: savedUser.username, email: savedUser.email, id: savedUser._id });
 };
 
 export const updateUser = async (req, res) => {
