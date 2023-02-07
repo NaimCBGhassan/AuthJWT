@@ -19,8 +19,8 @@ const AdminProducts = () => {
     return <EmptyWindow value="products" />;
   } else {
     return (
-      <div className="w-5/6 px-10  my-10 mb-20 grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3  lg:grid-cols-4 ">
-        {data && data.map((product) => <AdminProductCard key={product.id} product={product} />)}
+      <div className="w-full md:w-5/6 px-10  my-10 mb-20 grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-5 ">
+        {data && data.map((product) => <AdminProductCard key={product._id} product={product} />)}
       </div>
     );
   }

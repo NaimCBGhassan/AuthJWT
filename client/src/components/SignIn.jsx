@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
-import { axiosSignIn } from "../api/sign";
+import { axiosSignIn } from "../api/users";
 
 const SignIn = () => {
   const [error, setError] = useState(null);
@@ -25,8 +25,8 @@ const SignIn = () => {
 
   return (
     <div className=" flex justify-center items-center absolute inset-0">
-      <div className="h-3/6 w-2/6 bg-slate-500 px-5 py-5 shadow-md shadow-slate-800 rounded-md">
-        <h1 className="text-center text-2xl font-bold text-slate-50 mt-2">Login</h1>
+      <div className="  w-4/6 sm:w-2/6 bg-slate-500 px-5 py-5 shadow-md shadow-slate-800 rounded-md">
+        <h1 className="text-center text-2xl font-bold text-slate-50 mt-2">SignIn</h1>
         <Formik
           initialValues={{ username: "", password: "" }}
           validationSchema={Yup.object({

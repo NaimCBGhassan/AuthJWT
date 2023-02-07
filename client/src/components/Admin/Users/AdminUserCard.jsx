@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
-import { useDeleteUsers, useUpdateUsers } from "../../../api/sign";
+import { useDeleteUsers, useUpdateUsers } from "../../../api/users";
 
 const AdminUserCard = ({ user }) => {
   const { username, email, roles, id } = user;
@@ -69,20 +69,19 @@ const AdminUserCard = ({ user }) => {
             {({ handleSubmit }) => (
               <Form className="flex flex-col items" onSubmit={handleSubmit}>
                 <div className="h-14">
-                  <Field placeholder="Username" name="username" id="username" className="rounded px-2 py-1 w-full" />
+                  <Field placeholder="Username" name="username" className="rounded px-2 py-1 w-full" />
                 </div>
                 <div className="h-14">
                   <Field
                     type="password"
                     placeholder="Password"
                     name="password"
-                    id="password"
                     autoComplete="on"
                     className="rounded px-2 py-1 w-full"
                   />
                 </div>
                 <div className="h-14">
-                  <Field as="select" name="roles" id="roles" className="rounded px-2 py-1 w-full">
+                  <Field as="select" name="roles" className="rounded px-2 py-1 w-full">
                     <option value="">Seleccione un rol</option>
                     <option value="user">User</option>
                     <option value="moderator">Moderator</option>

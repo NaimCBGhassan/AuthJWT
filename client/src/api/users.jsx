@@ -13,10 +13,11 @@ export const axiosSignIn = async (values) => {
   }
 };
 
-/*SignUp -- Create Users*/
-const axiosSignUp = async ({ values, token }) => {
+/*SignUp*/
+const axiosSignUp = async ({ values }) => {
   try {
-    return await axios.post("/api/users", values, { headers: { Authorization: token } });
+    const res = await axios.post("/api/auth/signup", values);
+    return res.data.token;
   } catch (error) {
     throw error.response.data;
   }
@@ -25,6 +26,22 @@ const axiosSignUp = async ({ values, token }) => {
 export function useSignUp() {
   const queryClient = useQueryClient();
   return useMutation(axiosSignUp, {
+    onSuccess: () => queryClient.invalidateQueries(["users"]),
+  });
+}
+
+/*Create Users*/
+const axiosCreateUser = async ({ values, token }) => {
+  try {
+    return await axios.post("/api/users", values, { headers: { Authorization: token } });
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+export function useCreateUser() {
+  const queryClient = useQueryClient();
+  return useMutation(axiosCreateUser, {
     onSuccess: () => queryClient.invalidateQueries(["users"]),
   });
 }

@@ -1,5 +1,7 @@
+import LayoutPublic from "./LayoutPublic";
+
 const NotFound = () => {
-  return <div>NotFound</div>;
+  return <LayoutPublic />;
 };
 
 export default NotFound;

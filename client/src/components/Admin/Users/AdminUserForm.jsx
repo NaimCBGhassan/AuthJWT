@@ -1,8 +1,7 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
 import * as Yup from "yup";
-import { useSignUp } from "../../../api/sign";
+import { useCreateUser } from "../../../api/users";
 
 const initialValues = { username: "", email: "", password: "", roles: "" };
 
@@ -12,7 +11,7 @@ const AdminUserForm = ({ setView }) => {
 
   const token = sessionStorage.getItem("token");
 
-  const { mutateAsync, error } = useSignUp();
+  const { mutateAsync, error } = useCreateUser();
 
   const handleErrors = (error) => {
     if (error.msg.includes("Email")) setErrorView({ email: true, msg: error.msg });
@@ -23,20 +22,14 @@ const AdminUserForm = ({ setView }) => {
   };
 
   return (
-    <div className=" flex-grow flex flex-col items-center h-full">
-      <header className="w-2/6 pt-4 flex justify-between text-sm text-slate-50 cursor-pointer">
-        <NavLink to="/products">Back</NavLink>
-        <button className="" onClick={() => setView({ productForm: true })}>
-          Create Products
-        </button>
-      </header>
+    <div className=" absolute inset-0 flex justify-center items-center ">
       <Formik
         initialValues={values}
         validationSchema={Yup.object({
-          username: Yup.string().min(1, "Minimum 1 characters").required("Username is required"),
-          email: Yup.string().min(1, "Minimum 1 characters").required("Email is required"),
-          password: Yup.string().min(1, "Minimum 1 characters").required("Password is required"),
-          roles: Yup.string().min(1, "Minimum 1 characters").required("Roles is required"),
+          username: Yup.string().min(5, "Minimum 5 characters").required("Username is required"),
+          email: Yup.string().min(5, "Minimum 5 characters").email().required("Email is required"),
+          password: Yup.string().min(5, "Minimum 5 characters").required("Password is required"),
+          roles: Yup.string().required("Roles is required"),
         })}
         onSubmit={async (values, actions) => {
           try {
@@ -55,7 +48,7 @@ const AdminUserForm = ({ setView }) => {
           <Form
             onSubmit={handleSubmit}
             autoComplete="off"
-            className="h-5/6 w-2/6 bg-slate-500 px-5 py-5 shadow-md shadow-slate-800 rounded-md"
+            className=" w-4/6 md:w-2/6 bg-slate-500 px-5 py-5 shadow-md shadow-slate-800 rounded-md"
           >
             <h1 className="text-center text-2xl font-bold text-slate-50 mt-2">Create User</h1>
             <div className="h-16">

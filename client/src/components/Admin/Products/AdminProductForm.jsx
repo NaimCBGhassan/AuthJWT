@@ -13,13 +13,7 @@ const AdminUserForm = ({ setView }) => {
   const { mutateAsync } = useCreateProducts();
 
   return (
-    <div className=" flex-grow flex flex-col items-center h-full">
-      <header className="w-2/6 pt-4 flex justify-between text-sm text-slate-50 cursor-pointer">
-        <NavLink to="/products">Back</NavLink>{" "}
-        <button className="" onClick={() => setView({ userForm: true })}>
-          Create Users
-        </button>
-      </header>
+    <div className=" absolute inset-0 flex justify-center items-center">
       <Formik
         initialValues={values}
         validationSchema={Yup.object({
@@ -31,6 +25,7 @@ const AdminUserForm = ({ setView }) => {
         onSubmit={async (values, actions) => {
           try {
             await mutateAsync({ values, token });
+            setView({ products: true, flag: true });
           } catch (error) {
             handleErrors(error);
           }
@@ -39,7 +34,7 @@ const AdminUserForm = ({ setView }) => {
         {({ handleSubmit }) => (
           <Form
             onSubmit={handleSubmit}
-            className="h-5/6 w-2/6 bg-slate-500 px-5 py-5 shadow-md shadow-slate-800 rounded-md"
+            className=" w-4/6 md:w-2/6 bg-slate-500 px-5 py-5 shadow-md shadow-slate-800 rounded-md"
           >
             <h1 className="text-center text-2xl font-bold text-slate-50 mt-2">Create Products</h1>
             <div className="h-16">
