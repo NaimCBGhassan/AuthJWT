@@ -1,4 +1,4 @@
-import { useMutation } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 
 import axios from "axios";
 
@@ -13,7 +13,7 @@ export const axiosSignIn = async (values) => {
   }
 };
 
-/*SignUp*/
+/*SignUp -- Create Users*/
 const axiosSignUp = async ({ values, token }) => {
   try {
     return await axios.post("/api/users", values, { headers: { Authorization: token } });
@@ -23,5 +23,65 @@ const axiosSignUp = async ({ values, token }) => {
 };
 
 export function useSignUp() {
-  return useMutation(axiosSignUp, {});
+  const queryClient = useQueryClient();
+  return useMutation(axiosSignUp, {
+    onSuccess: () => queryClient.invalidateQueries(["users"]),
+  });
+}
+
+/*Get users */
+
+const axiosGetUsers = async (token) => {
+  try {
+    const res = await axios.get("/api/users", { headers: { Authorization: token } });
+    return res?.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export function useGetUsers(token) {
+  return useQuery({
+    queryKey: ["users"],
+    queryFn: () => axiosGetUsers(token),
+    refetchOnWindowFocus: false,
+    refetchInterval: false,
+    retry: 1,
+  });
+}
+
+/*Update Users*/
+const axiosUpdateUsers = async ({ values, id, token }) => {
+  try {
+    return axios.put(`/api/users/${id}`, values, { headers: { Authorization: token } });
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+export function useUpdateUsers() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: axiosUpdateUsers,
+    onSuccess: async () => await queryClient.invalidateQueries(["users"]),
+  });
+}
+
+/*Delete Users*/
+const axiosDeleteUsers = async ({ id, token }) => {
+  try {
+    return await axios.delete(`/api/users/${id}`, { headers: { Authorization: token } });
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+export function useDeleteUsers() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: axiosDeleteUsers,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["users"]);
+    },
+  });
 }

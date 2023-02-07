@@ -1,21 +1,37 @@
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import axios from "axios";
 
 /*getProducts*/
 
-const getProductsAxios = async (token) => {
-  return await axios.get("/api/products", { headers: { Authorization: token } });
+const axiosGetUsers = async (token) => {
+  try {
+    const res = await axios.get("/api/products", { headers: { Authorization: token } });
+    return res?.data;
+  } catch (error) {
+    return error;
+  }
 };
 
 export const useGetProducts = (token) => {
-  const { data, error, isLoading } = useQuery({
+  return useQuery({
     queryKey: ["products"],
-    queryFn: () => getProductsAxios(token),
-    refetchOnMount: false,
+    queryFn: () => axiosGetUsers(token),
     refetchOnWindowFocus: false,
     refetchInterval: false,
-    refetchIntervalInBackground: false,
     retry: 1,
   });
-  return { data: data?.data, error, isLoading };
 };
+
+/*Create Products */
+const axiosCreateProducts = async ({ values, token }) => {
+  return axios.post("/api/products", values, { headers: { Authorization: token } });
+};
+
+export function useCreateProducts() {
+  const queryClient = useQueryClient();
+  return useMutation(axiosCreateProducts, {
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["products"]);
+    },
+  });
+}

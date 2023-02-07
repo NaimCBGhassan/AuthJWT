@@ -1,27 +1,39 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import * as Yup from "yup";
+import { useCreateProducts } from "../../../api/products";
 
-const AdminProductForm = ({ setView }) => {
+const initialValues = { name: "", category: "", price: "", imgURL: "" };
+
+const AdminUserForm = ({ setView }) => {
+  const [values, setValues] = useState(initialValues);
+
+  const token = sessionStorage.getItem("token");
+  const { mutateAsync } = useCreateProducts();
+
   return (
-    <div className="flex-grow flex flex-col items-center ">
+    <div className=" flex-grow flex flex-col items-center h-full">
       <header className="w-2/6 pt-4 flex justify-between text-sm text-slate-50 cursor-pointer">
         <NavLink to="/products">Back</NavLink>{" "}
-        <button className="" onClick={() => setView(false)}>
+        <button className="" onClick={() => setView({ userForm: true })}>
           Create Users
         </button>
       </header>
-
       <Formik
-        initialValues={{ name: "", category: "", price: "", imgURL: "" }}
+        initialValues={values}
         validationSchema={Yup.object({
           name: Yup.string().min(1, "Minimum 1 characters").required("Name is required"),
           category: Yup.string().min(1, "Minimum 1 characters").required("Category is required"),
           price: Yup.number().min(1, "Minimum 1 characters").required("Price is required"),
           imgURL: Yup.string().min(1, "Minimum 1 characters").required("Image is required"),
         })}
-        onSubmit={(values, actions) => {
-          console.log(values);
+        onSubmit={async (values, actions) => {
+          try {
+            await mutateAsync({ values, token });
+          } catch (error) {
+            handleErrors(error);
+          }
         }}
       >
         {({ handleSubmit }) => (
@@ -71,4 +83,4 @@ const AdminProductForm = ({ setView }) => {
   );
 };
 
-export default AdminProductForm;
+export default AdminUserForm;

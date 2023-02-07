@@ -2,7 +2,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import * as Yup from "yup";
-import { useSignUp } from "../api/sign";
+import { useSignUp } from "../../../api/sign";
 
 const initialValues = { username: "", email: "", password: "", roles: "" };
 
@@ -12,22 +12,21 @@ const AdminUserForm = ({ setView }) => {
 
   const token = sessionStorage.getItem("token");
 
-  const { mutate, data, error } = useSignUp();
+  const { mutateAsync, error } = useSignUp();
 
-  const handleErrors = () => {
-    /* console.log(error); */
+  const handleErrors = (error) => {
     if (error.msg.includes("Email")) setErrorView({ email: true, msg: error.msg });
     if (error.msg.includes("Username")) setErrorView({ username: true, msg: error.msg });
-    /* if(error.msg.includes("password"))setError({ password: true, msg: data.msg })
-    if(error.msg.includes("password"))setError({ password: true, msg: data.msg }) */
-    /*  setTimeout(() => setError(false), 2000); */
+    if (error.msg.includes("password")) setErrorView({ password: true, msg: data.msg });
+    if (error.msg.includes("Role")) setErrorView({ roles: true, msg: data.msg });
+    setTimeout(() => setErrorView(false), 2000);
   };
 
   return (
-    <div className=" flex-grow flex flex-col items-center">
+    <div className=" flex-grow flex flex-col items-center h-full">
       <header className="w-2/6 pt-4 flex justify-between text-sm text-slate-50 cursor-pointer">
-        <NavLink to="/products">Back</NavLink>{" "}
-        <button className="" onClick={() => setView(true)}>
+        <NavLink to="/products">Back</NavLink>
+        <button className="" onClick={() => setView({ productForm: true })}>
           Create Products
         </button>
       </header>
@@ -40,16 +39,22 @@ const AdminUserForm = ({ setView }) => {
           roles: Yup.string().min(1, "Minimum 1 characters").required("Roles is required"),
         })}
         onSubmit={async (values, actions) => {
-          values.roles = [values.roles];
-          if (values.roles.includes("admin")) values.roles.push("moderator");
-          await mutate({ values, token });
-          actions.setFieldValue("roles", values.roles[0]);
-          if (error) handleErrors(data);
+          try {
+            values.roles = [values.roles];
+            if (values.roles.includes("admin")) values.roles.push("moderator");
+            await mutateAsync({ values, token });
+          } catch (error) {
+            handleErrors(error);
+          } finally {
+            actions.setFieldValue("roles", values.roles[0]);
+            setView({ users: true, flag: true });
+          }
         }}
       >
-        {({ handleSubmit }) => (
+        {({ handleSubmit, values }) => (
           <Form
             onSubmit={handleSubmit}
+            autoComplete="off"
             className="h-5/6 w-2/6 bg-slate-500 px-5 py-5 shadow-md shadow-slate-800 rounded-md"
           >
             <h1 className="text-center text-2xl font-bold text-slate-50 mt-2">Create User</h1>
@@ -57,7 +62,7 @@ const AdminUserForm = ({ setView }) => {
               <label htmlFor="username" className="block w-100 mt-4 text-sm text-slate-50 ">
                 Username
               </label>
-              <Field name="username" id="username" className="rounded px-2 py-1 w-full"></Field>
+              <Field name="username" id="username" placeholder="Username" className="rounded px-2 py-1 w-full"></Field>
               <ErrorMessage component="p" className="text-pink-700 text-sm" name="username" />
               {errorView?.username && <p className="text-pink-700 text-sm">{error.msg}</p>}
             </div>
@@ -65,8 +70,9 @@ const AdminUserForm = ({ setView }) => {
               <label htmlFor="email" className="block w-100 text-sm text-slate-50">
                 Email
               </label>
-              <Field name="email" id="email" className="rounded px-2 py-1 w-full"></Field>
+              <Field name="email" id="email" placeholder="Email" className="rounded px-2 py-1 w-full"></Field>
               <ErrorMessage component="p" className="text-pink-700 text-sm" name="email" />
+              {errorView?.email && <p className="text-pink-700 text-sm">{error.msg}</p>}
             </div>
             <div className="h-16 mt-1">
               <label htmlFor="password" className="block w-100 text-sm text-slate-50">
@@ -74,11 +80,11 @@ const AdminUserForm = ({ setView }) => {
               </label>
               <Field
                 type="password"
-                autoComplete="on"
+                placeholder="Password"
                 name="password"
                 id="password"
                 className="rounded px-2 py-1 w-full"
-              ></Field>
+              />
               <ErrorMessage component="p" className="text-pink-700 text-sm" name="password" />
             </div>
             <div className="h-20 mt-1">
@@ -92,6 +98,7 @@ const AdminUserForm = ({ setView }) => {
                 <option value="admin">Admin</option>
               </Field>
               <ErrorMessage component="p" className="text-pink-700 text-sm" name="roles" />
+              {errorView?.role && <p className="text-pink-700 text-sm">{error.msg}</p>}
             </div>
             <button
               type="submit"
