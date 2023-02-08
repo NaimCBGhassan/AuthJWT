@@ -8,7 +8,7 @@ const userRouter = Router();
 userRouter.get("/", [verifyToken, isModerator], getUsers);
 userRouter.get("/user", [verifyToken], getUser);
 userRouter.post("/", [verifyToken, isAdmin, checkRolesExisted], createUser);
-userRouter.put("/:userId", [verifyToken, isModerator, checkRolesExisted], updateUser);
+userRouter.put("/:userId", [verifyToken, isAdmin, checkRolesExisted], updateUser);
 userRouter.delete("/:userId", [verifyToken, isAdmin], deleteUser);
 
 export { userRouter };

@@ -68,9 +68,9 @@ export function useGetUsers(token) {
 }
 
 /*Update Users*/
-const axiosUpdateUsers = async ({ values, id, token }) => {
+const axiosUpdateUsers = async ({ newValues, id, token }) => {
   try {
-    return axios.put(`/api/users/${id}`, values, { headers: { Authorization: token } });
+    return axios.put(`/api/users/${id}`, newValues, { headers: { Authorization: token } });
   } catch (error) {
     return error.response.data;
   }

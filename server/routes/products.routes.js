@@ -8,10 +8,10 @@ productsRouter.get("/", verifyToken, productsCtrl.getProducts);
 
 productsRouter.get("/:productId", verifyToken, productsCtrl.getProductsById);
 
-productsRouter.post("/", [verifyToken, isAdmin], productsCtrl.createProducts);
+productsRouter.post("/", [verifyToken, isModerator], productsCtrl.createProducts);
 
 productsRouter.put("/:productId", [verifyToken, isModerator], productsCtrl.updateProducts);
 
-productsRouter.delete("/:productId", [verifyToken, isAdmin], productsCtrl.deleteProducts);
+productsRouter.delete("/:productId", [verifyToken, isModerator], productsCtrl.deleteProducts);
 
 export { productsRouter };

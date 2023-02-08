@@ -11,6 +11,7 @@ const SignIn = () => {
 
   useEffect(() => {
     sessionStorage.removeItem("token");
+    sessionStorage.removeItem("view");
   }, []);
 
   const navigate = useNavigate();

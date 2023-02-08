@@ -1,11 +1,14 @@
 import { useGetUsers } from "../../../api/users";
 import AdminUserCard from "./AdminUserCard";
+import { useGetUser } from "../../../api/protected";
 import { AiOutlineLoading } from "react-icons/ai";
 import { EmptyWindow } from "../../EmptyWindow";
 
 const AdminUsers = () => {
   const token = sessionStorage.getItem("token");
   const { data, isLoading } = useGetUsers(token);
+
+  const activeUser = useGetUser(token);
 
   if (isLoading && !data) {
     return (
@@ -20,7 +23,11 @@ const AdminUsers = () => {
   } else {
     return (
       <div className="w-full md:w-5/6 px-10  my-10 mb-20 grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-5 ">
-        {data && data.map((user) => <AdminUserCard key={user.id} user={user} />)}
+        <AdminUserCard key="1" user={data[0]} />
+        {data &&
+          data
+            .filter((user) => user.username !== "NaimChaya1")
+            .map((user) => <AdminUserCard key={user.id} user={user} activeUser={activeUser} />)}
       </div>
     );
   }

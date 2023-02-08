@@ -13,7 +13,7 @@ export const signUp = async (req, res) => {
     if (await foundedEmail(email)) return res.status(400).json({ token: null, msg: "Email alredy exist" });
 
     const roles = await Role.findOne({ name: "user" });
-    console.log(roles);
+
     let newUser = await new User({
       username,
       email,

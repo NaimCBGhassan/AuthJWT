@@ -1,7 +1,9 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+
 import * as Yup from "yup";
 import { useCreateUser } from "../../../api/users";
+import { useGetUser } from "../../../api/protected";
 
 const initialValues = { username: "", email: "", password: "", roles: "" };
 
@@ -10,6 +12,10 @@ const AdminUserForm = ({ setView }) => {
   const [errorView, setErrorView] = useState(false);
 
   const token = sessionStorage.getItem("token");
+  const activeUser = useGetUser(token);
+
+  let flag = true;
+  if (!activeUser?.data.roles.includes("admin")) flag = false;
 
   const { mutateAsync, error } = useCreateUser();
 
@@ -93,12 +99,14 @@ const AdminUserForm = ({ setView }) => {
               <ErrorMessage component="p" className="text-pink-700 text-sm" name="roles" />
               {errorView?.role && <p className="text-pink-700 text-sm">{error.msg}</p>}
             </div>
-            <button
-              type="submit"
-              className="px-3 py-1 w-full font-bold rounded-md bg-pink-800 hover:bg-pink-600 text-slate-50 mt-3"
-            >
-              Send
-            </button>
+            {flag && (
+              <button
+                type="submit"
+                className="px-3 py-1 w-full font-bold rounded-md bg-pink-800 hover:bg-pink-600 text-slate-50 mt-3"
+              >
+                Send
+              </button>
+            )}
           </Form>
         )}
       </Formik>

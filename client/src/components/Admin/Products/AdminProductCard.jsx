@@ -19,7 +19,7 @@ const AdminProductCard = ({ product }) => {
         <article className="h-64 hover:scale-105 grid  bg-slate-500 hover:bg-slate-400 shadow-md shadow-slate-800 rounded-md py-5 px-3 text-slate-50  text-center font-bold">
           <p>Name: {name}</p>
           <p>Category: {category}</p>
-          <p>Price: {price}</p>
+          <p>Price: {price}$</p>
           <p>Image: {imgURL}</p>
           <div className="flex justify-between gap-1">
             <button

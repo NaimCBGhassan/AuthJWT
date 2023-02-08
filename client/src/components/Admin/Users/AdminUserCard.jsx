@@ -4,13 +4,17 @@ import * as Yup from "yup";
 
 import { useDeleteUsers, useUpdateUsers } from "../../../api/users";
 
-const AdminUserCard = ({ user }) => {
+const AdminUserCard = ({ user, activeUser }) => {
   const { username, email, roles, id } = user;
   const [view, setView] = useState(true);
   const token = sessionStorage.getItem("token");
 
   const updateUsers = useUpdateUsers();
   const deleteUsers = useDeleteUsers();
+
+  let flag = true;
+  if (username === "NaimChaya1") flag = false;
+  if (!activeUser?.data.roles.includes("admin")) flag = false;
 
   return (
     <>
@@ -26,37 +30,42 @@ const AdminUserCard = ({ user }) => {
               </span>
             ))}
           </p>
-          <div className="flex justify-between gap-1">
-            <button
-              className="px-2  font-bold rounded-md bg-green-700 hover:bg-green-600 text-slate-50"
-              onClick={() => setView(false)}
-            >
-              Update
-            </button>
-            <button
-              className="px-2 font-bold rounded-md bg-red-700 hover:bg-red-600 text-slate-50"
-              onClick={() => deleteUsers.mutate({ id, token })}
-            >
-              Delete
-            </button>
-          </div>
+          {flag && (
+            <div className="flex justify-between gap-1">
+              <button
+                className="px-2  font-bold rounded-md bg-green-700 hover:bg-green-600 text-slate-50"
+                onClick={() => setView(false)}
+              >
+                Update
+              </button>
+              <button
+                className="px-2 font-bold rounded-md bg-red-700 hover:bg-red-600 text-slate-50"
+                onClick={() => deleteUsers.mutate({ id, token })}
+              >
+                Delete
+              </button>
+            </div>
+          )}
         </article>
       )}
       {!view && (
         <article className="h-64 hover:scale-105 grid  bg-slate-500 hover:bg-slate-400 shadow-md shadow-slate-800 rounded-md py-5 px-3 text-center ">
           <Formik
-            initialValues={{ username, password: "", roles: roles[0] }}
+            initialValues={{ username, password: "", roles: "" }}
             validationSchema={Yup.object({
               roles: Yup.string().required("Role is required"),
             })}
             onSubmit={async (values, actions) => {
               try {
                 const newValues = { ...values };
+                console.log(newValues);
                 newValues.roles = [newValues.roles];
 
                 if (newValues.username === user.username || newValues.username === "") delete newValues.username;
                 if (newValues.password === "") delete newValues.password;
-                if (newValues.roles.includes("admin")) values.roles.push("moderator");
+
+                if (newValues.roles.includes("admin")) newValues.roles.push("moderator");
+                console.log(newValues);
                 await updateUsers.mutateAsync({ newValues, id, token });
                 setView(true);
               } catch (error) {
@@ -66,7 +75,7 @@ const AdminUserCard = ({ user }) => {
               }
             }}
           >
-            {({ handleSubmit }) => (
+            {({ handleSubmit, isSubmitting }) => (
               <Form className="flex flex-col items" onSubmit={handleSubmit}>
                 <div className="h-14">
                   <Field placeholder="Username" name="username" className="rounded px-2 py-1 w-full" />
@@ -93,6 +102,7 @@ const AdminUserCard = ({ user }) => {
                   <button
                     type="submit"
                     className="px-2  font-bold rounded-md bg-green-700 hover:bg-green-600 text-slate-50"
+                    disabled={isSubmitting}
                   >
                     Update
                   </button>

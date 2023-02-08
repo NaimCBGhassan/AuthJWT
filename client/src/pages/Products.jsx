@@ -3,6 +3,7 @@ import { ProductCard } from "../components/index";
 
 const Products = () => {
   const token = sessionStorage.getItem("token");
+
   const { data, isLoading } = useGetProducts(token);
 
   return (
