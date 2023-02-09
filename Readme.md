@@ -2,6 +2,8 @@
 
 ---
 
+## [Here, the project deployment](https://mern-jwt.up.railway.app/)
+
 In this Project, I utilized "ProtectedRoutes" component on Client Side, to secure routes and verify user. On the serve side, I implemented JWT to protect routes and added three roles:
 
 - User: this type of user can´t do much. They only have access to "/products".
