@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node ./server/index.js",
+    "build": "npm install --prefix client && npm run build --prefix client && rm -rf client/node_modules",
     "dev": "nodemon ./server/index.js"
   },
   "author": "Naim Chaya",
