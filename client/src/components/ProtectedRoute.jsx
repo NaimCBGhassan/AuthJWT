@@ -16,15 +16,15 @@ const ProtectedRoute = () => {
   useEffect(() => {
     if (!token && !isLoading) {
       toast(data.response.data.msg, {
-        duration: 4000,
-        style: { backgroundColor: "#9f1239", color: "#f8fafc", fontWeight: "bold" },
+        duration: 2000,
+        style: { backgroundColor: "#9f1239", color: "#f8fafc", fontWeight: "bold", position: "relative", top: "30px" },
       });
     }
 
     if (flag) {
       toast("The user dosen`t have permissions", {
-        duration: 4000,
-        style: { backgroundColor: "#9f1239", color: "#f8fafc", fontWeight: "bold" },
+        duration: 2000,
+        style: { backgroundColor: "#9f1239", color: "#f8fafc", fontWeight: "bold", position: "relative", top: "30px" },
       });
     }
   }, [location.pathname, token, data]);
