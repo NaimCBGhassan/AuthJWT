@@ -26,7 +26,7 @@ const AdminUsers = () => {
         <AdminUserCard key="1" user={data[0]} />
         {data &&
           data
-            .filter((user) => user.username !== "NaimChaya1")
+            .filter((user) => user.username !== "Admin")
             .map((user) => <AdminUserCard key={user.id} user={user} activeUser={activeUser} />)}
       </div>
     );

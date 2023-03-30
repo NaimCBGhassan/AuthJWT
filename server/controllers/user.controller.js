@@ -3,6 +3,7 @@ import User from "../models/User.js";
 
 export const getUsers = async (req, res) => {
   try {
+    console.log("llega");
     const users = await User.find().populate("roles");
 
     const usersData = users.map((el) => {
@@ -23,7 +24,6 @@ export const getUsers = async (req, res) => {
 
 export const getUser = async (req, res) => {
   try {
-    console.log(req);
     let { _id, username, email, roles } = await User.findById({ _id: req.userId }).populate("roles");
 
     roles = roles.map((el) => el.name);
@@ -42,7 +42,7 @@ export const createUser = async (req, res) => {
 
   if (await foundedEmail(email)) return res.status(400).json({ token: null, msg: "Email alredy exist" });
 
-  let newUser = await new User({
+  let newUser = new User({
     username,
     email,
     password: await User.hashPassword(password),
